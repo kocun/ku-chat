@@ -103,6 +103,7 @@ class MainScene extends Component {
                         value={this.state.messsageText}
                         multiline={false}
                         placeholder='Mesajınız'
+                        autoCorrect={false}
                     />
                     <TouchableHighlight style={styles.sendsendTouchableHighlight} onPress={this.sendMessage}>
                         <Text>
