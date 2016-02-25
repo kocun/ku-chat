@@ -45,13 +45,26 @@ class MainScene extends Component {
         // child_added Firebase'in messages child'ina her yeni child eklendiğinde çalışıyor. İlk açılışta da her
         // eklenmiş kayıt için de 1 kere çağrılıyor. Bu sayede listeyi ilk açtığımızda eski mesajlar ile dolduruyoruz.
         // Bunu optimize etmeli ve HTTP roundtrip sayısını azaltmalıyız! Ama nasıl?
-        this.firebaseMessagesRef.limitToLast(20).on('child_added', function (snapshot, prevChildKey) {
+        this.firebaseMessagesRef.limitToLast(20).once('value', function (snapshot) {
 
-            var message = snapshot.val();
+            var newMessages = snapshot.val();
 
-            if (message != null) {
+            console.log(newMessages);
 
-                thisRef.messages.push(message);
+            if (newMessages) {
+
+                var key = null;
+
+                for (key in newMessages) {
+
+                    if (newMessages.hasOwnProperty(key)) {
+                        thisRef.messages.push(newMessages[key]);
+                    }
+
+                }
+
+                var lastAddedKey = key;
+
                 var messageArrayItemIDs = thisRef.messages.map((row, index) => index).reverse();
 
                 // Burada yukarıda tanımladığımız thisRef yerine direkt this kullanmış olsaydık, Firebase'in
@@ -60,7 +73,30 @@ class MainScene extends Component {
                     messsageText: '',
                     dataSource: thisRef.state.dataSource.cloneWithRows(thisRef.messages, messageArrayItemIDs)
                 }, function () {
-                    this.refs.messagesListView.scrollTo({ x: 0, y: 0, animated: false });
+
+                    this.firebaseMessagesRef.limitToLast(1).on('child_added', function (snapshot, prevChildKey) {
+
+                        if (snapshot.key() == lastAddedKey) {
+                            return;
+                        }
+
+                        var newMessage = snapshot.val();
+
+                        if (newMessage) {
+                            thisRef.messages.push(newMessage);
+                        }
+
+                        var messageArrayItemIDs = thisRef.messages.map((row, index) => index).reverse();
+
+                        thisRef.setState({
+                            messsageText: '',
+                            dataSource: thisRef.state.dataSource.cloneWithRows(thisRef.messages, messageArrayItemIDs)
+                        }, function () {
+                            this.refs.messagesListView.scrollTo({ x: 0, y: 0, animated: false });
+                        });
+
+                    });
+
                 });
 
             }
@@ -97,12 +133,10 @@ class MainScene extends Component {
                         ref='messageTextTextInput'
                         style={styles.messageTextTextInput}
                         onChangeText={(messsageText) => this.setState({messsageText})}
-                        // iOS'ta return tuşunda mesajı göndermek için burası var, Android'te çalışmıyor. Bu yüzden ayrıca
-                        // send button'u da ekledim.
-                        //onEndEditing={this.sendMessage}
                         value={this.state.messsageText}
                         multiline={false}
                         placeholder='Mesajınız'
+                        autoCorrection={false}
                     />
                     <TouchableHighlight style={styles.sendsendTouchableHighlight} onPress={this.sendMessage}>
                         <Text>
@@ -124,8 +158,6 @@ class MainScene extends Component {
     }
 
     sendMessage() {
-
-        console.log('sendMessage');
 
         this.firebaseMessagesRef.push({
             // username'i static yazıyoruz şimdilik. Önümüzdeki derslerde facebook'tan vs. çekerek dinamik hale
