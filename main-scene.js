@@ -99,11 +99,10 @@ class MainScene extends Component {
                         onChangeText={(messsageText) => this.setState({messsageText})}
                         // iOS'ta return tuşunda mesajı göndermek için burası var, Android'te çalışmıyor. Bu yüzden ayrıca
                         // send button'u da ekledim.
-                        onEndEditing={this.sendMessage}
+                        //onEndEditing={this.sendMessage}
                         value={this.state.messsageText}
                         multiline={false}
                         placeholder='Mesajınız'
-                        autoCorrect={false}
                     />
                     <TouchableHighlight style={styles.sendsendTouchableHighlight} onPress={this.sendMessage}>
                         <Text>
@@ -126,15 +125,14 @@ class MainScene extends Component {
 
     sendMessage() {
 
+        console.log('sendMessage');
+
         this.firebaseMessagesRef.push({
             // username'i static yazıyoruz şimdilik. Önümüzdeki derslerde facebook'tan vs. çekerek dinamik hale
             // getireceğiz.
-            username: "umit",
+            username: "umit324324",
             text: this.state.messsageText
         });
-
-        // TextInput'un ref='messageTextTextInput' attribute'üne dikkat!
-        this.refs.messageTextTextInput.focus();
 
     }
 
