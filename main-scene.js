@@ -113,7 +113,7 @@ class MainScene extends Component {
 
     componentWillUnmount() {
         // Firebase connection'in sonlandırmamız uygulamanın reliability'si açısından önemli!
-        this.state.firebaseMessagesRef.off();
+        this.firebaseMessagesRef.off();
     }
 
     render() {

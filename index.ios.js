@@ -8,15 +8,15 @@ import React, {
     Component,
 } from 'react-native';
 
-import MainScene from './main-scene';
+import EntranceScene from './entrance-scene';
 
 class Kuchat extends Component {
-  render() {
-    return (
-        <MainScene>
-        </MainScene>
-    );
-  }
+    render() {
+        return (
+            <EntranceScene>
+            </EntranceScene>
+        );
+    }
 }
 
 AppRegistry.registerComponent('Kuchat', () => Kuchat);
