@@ -73,7 +73,7 @@ class LoginScene extends Component {
             .setItem('ASYNCSTORAGE_KEY_USERNAME', this.state.username)
             .then((username) => {
                 thisRef.props.navigator.replace({ id: 'mainRoute' });
-            });
+            }); 
 
     }
 
