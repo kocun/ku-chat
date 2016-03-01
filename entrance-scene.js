@@ -67,12 +67,12 @@ class EntranceScene extends Component {
 
             case 'loginRoute': {
                 var LoginScene = require('./login-scene');
-                return (<LoginScene navigator={navigator} title="Login Scene"/>);
+                return (<LoginScene navigator={navigator} passProps={navigator} title="Login Scene"/>);
             }
 
             case 'mainRoute': {
                 var MainScene = require('./main-scene');
-                return (<MainScene navigator={navigator} title="Main Scene"/>);
+                return (<MainScene navigator={navigator} passProps={navigator} title="Main Scene"/>);
             }
 
         }

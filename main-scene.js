@@ -12,7 +12,8 @@ import React, {
     TextInput,
     StatusBarIOS,
     TouchableHighlight,
-    RCTUIManager
+    RCTUIManager,
+    AsyncStorage
 } from 'react-native';
 import Firebase from 'firebase';
 import InvertibleScrollView from 'react-native-invertible-scroll-view';
@@ -30,6 +31,7 @@ class MainScene extends Component {
                 rowHasChanged: (row1, row2) => row1 !== row2,
             }),
             messsageText: '',
+            username: ''
         };
 
         // Not: ES6'da bunu yapmadan sendMessage içerisinde "this" reference'ını kullanamıyorsunuz.
@@ -109,6 +111,12 @@ class MainScene extends Component {
             StatusBarIOS.setHidden(true, false);
         }
 
+        AsyncStorage
+            .getItem('ASYNCSTORAGE_KEY_USERNAME')
+            .then((username) => {
+                this.state.username = username;
+            });
+
     }
 
     componentWillUnmount() {
@@ -162,7 +170,7 @@ class MainScene extends Component {
         this.firebaseMessagesRef.push({
             // username'i static yazıyoruz şimdilik. Önümüzdeki derslerde facebook'tan vs. çekerek dinamik hale
             // getireceğiz.
-            username: "umit324324",
+            username: this.state.username,
             text: this.state.messsageText
         });
 
