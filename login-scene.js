@@ -16,6 +16,9 @@ import React, {
     AsyncStorage
 } from 'react-native';
 
+var FBLogin = require('react-native-facebook-login');
+var FBLoginManager = React.FBLoginManager;
+
 class LoginScene extends Component {
 
     constructor(props) {
@@ -23,11 +26,7 @@ class LoginScene extends Component {
         super(props);
 
         this.state = {
-            username: ''
         };
-
-        // Not: ES6'da bunu yapmadan sendMessage içerisinde "this" reference'ını kullanamıyorsunuz.
-        this.setUsername = this.setUsername.bind(this);
 
     }
 
@@ -46,58 +45,18 @@ class LoginScene extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <TextInput
-                    ref='messageTextTextInput'
-                    style={styles.messageTextTextInput}
-                    onChangeText={(username) => this.setState({username})}
-                    value={this.state.username}
-                    multiline={false}
-                    placeholder='Kullanıcı Adı'
-                    autoCorrection={false}
-                />
-                <TouchableHighlight style={styles.sendsendTouchableHighlight} onPress={this.setUsername}>
-                    <Text>
-                        GÖNDER
-                    </Text>
-                </TouchableHighlight>
-            </View>
+            <FBLogin
+                onLogin={function(e){console.log(e)}}
+                onLogout={function(e){console.log(e)}}
+                onCancel={function(e){console.log(e)}}
+                onPermissionsMissing={function(e){console.log(e)}}
+            />
         );
-    }
-
-    setUsername() {
-
-        var thisRef = this;
-
-        AsyncStorage
-            .setItem('ASYNCSTORAGE_KEY_USERNAME', this.state.username)
-            .then((username) => {
-                thisRef.props.navigator.replace({ id: 'mainRoute' });
-            }); 
-
     }
 
 }
 
 const styles = StyleSheet.create({
-
-    container: {
-        flex: 1
-    },
-
-    messageTextTextInput: {
-        flex: 1,
-        paddingLeft: 5,
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1
-    },
-
-    sendsendTouchableHighlight: {
-        padding: 5,
-        margin: 5,
-        backgroundColor: '#dedede',
-    },
 
 });
 
