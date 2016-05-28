@@ -59,6 +59,9 @@ class EntranceScene extends Component {
 
     navigatorRenderScene(route, navigator) {
 
+        var MainScene = require('./main-scene');
+        return (<MainScene navigator={navigator} passProps={navigator} title="Main Scene"/>);
+
         switch (route.id) {
 
             case 'entranceRoute': {
